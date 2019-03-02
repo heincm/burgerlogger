@@ -6,10 +6,15 @@ let orm = {
 
     // Here our ORM is creating a simple method for performing a query of the entire table.
     // We make use of the callback to ensure that data is returned only once the query is done.
-    selectOne: function (callback) {
+    selectAll: function (tableName, callback) {
         let query = "SELECT * FROM " + tableName;
 
         connection.query(query, function (err, result) {
+            if (err){
+                console.log("err", err)
+            }
+            console.log(result)
+            console.log("callback", callback)
 
             callback(result);
 
