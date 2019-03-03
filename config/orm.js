@@ -14,7 +14,6 @@ let orm = {
                 console.log("err", err)
             }
             console.log(result)
-            console.log("callback", callback)
 
             callback(result);
 
