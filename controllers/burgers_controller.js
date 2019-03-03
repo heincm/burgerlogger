@@ -4,17 +4,17 @@ const burger = require('../models/burger');
 
 // Create all our routes and set up logic within those routes where required.
 router.get("/", function (req, res) {
-    burger.selectOne(function (data) {
+    burger.select(function (data) {
         let hbsObject = {
             burgers: data
         };
-        console.log(hbsObject);
+        console.log("object",hbsObject);
         res.render("index", hbsObject);
     });
 });
 
 router.post("/api/burgers", function (req, res) {
-    burger.insertOne(["burger_name", "devoured"], [req.body.burger_name, req.body.devoured], function (result) {
+    burger.create(["burger_name", "devoured"], [req.body.burger_name, req.body.devoured], function (result) {
         // Send back the ID of the new quote
         res.json({ id: result.insertId });
     });

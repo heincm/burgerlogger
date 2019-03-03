@@ -13,7 +13,6 @@ let orm = {
             if (err){
                 console.log("err", err)
             }
-            console.log(result)
 
             callback(result);
 
@@ -23,9 +22,9 @@ let orm = {
     // Here our ORM is creating a simple method for performing a query of a single character in the table.
     // Again, we make use of the callback to grab a specific character from the database.
 
-    updateOne: function (burger, callback) {
+    updateOne: function (tableName, callback) {
 
-        let query = "UPDATE " + tableName + " SET text=? WHERE id=?";
+        let query = "UPDATE " + tableName + " SET text= ? WHERE id= ?";
 
         connection.query(query, [
             burger.burger_name, burger.id
