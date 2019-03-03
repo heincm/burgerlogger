@@ -1,54 +1,100 @@
+// Import MySQL connection.
 const connection = require('./connections');
 
-let tableName = "burgers";
+function printQuestionMarks(num) {
+    let arr = [];
 
+    for (let i = 0; i < num; i++) {
+        arr.push("?");
+    }
+
+    return arr.toString();
+}
+
+// Helper function to convert object key/value pairs to SQL syntax
+function objToSql(ob) {
+    let arr = [];
+
+    // loop through the keys and push the key/value as a string int arr
+    for (let key in ob) {
+        let value = ob[key];
+        // check to skip hidden properties
+        if (Object.hasOwnProperty.call(ob, key)) {
+            // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
+            if (typeof value === "string" && value.indexOf(" ") >= 0) {
+                value = "'" + value + "'";
+            }
+            arr.push(key + "=" + value);
+        }
+    }
+
+    // translate array of strings to a single comma-separated string
+    return arr.toString();
+}
+
+// Object for all our SQL statement functions.
 let orm = {
+    all: function (tableInput, cb) {
+        let queryString = "SELECT * FROM " + tableInput + ";";
+        connection.query(queryString, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            cb(result);
+        });
+    },
+    create: function (table, cols, vals, cb) {
+        let queryString = "INSERT INTO " + table;
 
-    // Here our ORM is creating a simple method for performing a query of the entire table.
-    // We make use of the callback to ensure that data is returned only once the query is done.
-    selectAll: function (tableName, callback) {
-        let query = "SELECT * FROM " + tableName;
+        queryString += " (";
+        queryString += cols.toString();
+        queryString += ") ";
+        queryString += "VALUES (";
+        queryString += printQuestionMarks(vals.length);
+        queryString += ") ";
 
-        connection.query(query, function (err, result) {
-            if (err){
-                console.log("err", err)
+        console.log(queryString);
+
+        connection.query(queryString, vals, function (err, result) {
+            if (err) {
+                throw err;
             }
 
-            callback(result);
-
+            cb(result);
         });
     },
+    // An example of objColVals would be {name: panther, sleepy: true}
+    update: function (table, objColVals, condition, cb) {
+        let queryString = "UPDATE " + table;
 
-    // Here our ORM is creating a simple method for performing a query of a single character in the table.
-    // Again, we make use of the callback to grab a specific character from the database.
+        queryString += " SET ";
+        queryString += objToSql(objColVals);
+        queryString += " WHERE ";
+        queryString += condition;
 
-    updateOne: function (tableName, callback) {
+        console.log(queryString);
+        connection.query(queryString, function (err, result) {
+            if (err) {
+                throw err;
+            }
 
-        let query = "UPDATE " + tableName + " SET text= ? WHERE id= ?";
-
-        connection.query(query, [
-            burger.burger_name, burger.id
-        ], function (err, result) {
-
-            callback(result);
-
-        });
-
-    },
-
-    insertOne: function (burger, callback) {
-        let query = "INSERT INTO " + tableName + " (burger_name, devoured) VALUES (?,?)";
-        burger.devoured = burger.devoured || 0;
-        connection.query(query, [
-            burger.burger_name, burger.devoured
-        ], function (err, result) {
-
-            callback(result);
-
+            cb(result);
         });
     },
+    delete: function (table, condition, cb) {
+        let queryString = "DELETE FROM " + table;
+        queryString += " WHERE ";
+        queryString += condition;
+
+        connection.query(queryString, function (err, result) {
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+        });
+    }
 };
 
+// Export the orm object for the model (cat.js).
 module.exports = orm;
-
-
