@@ -3,23 +3,25 @@
     <h1>Burgers!</h1>
     <div class="row">
       <div class="col s6">
+        <h3>Uneaten Burgers</h3>
         {{#each burgers}}
         {{#unless this.devoured}}
-        <span>{{this.id}}. {{this.burger_name}}</span>
+        <p>{{this.id}}. {{this.burger_name}}</p>
         <div>
-            <button type="button" id="update" value={{this.id}}>Devour!</button>
+          <form action="/api/burgers/{{this.id}}?_method=PUT" method="POST">
+            <button type="submit">Devour!</button>
+          </form>
         </div>
         {{/unless}}
         {{/each}}
       </div>
 
       <div class="col s6">
+        <h3>Eaten burgers</h3>
         {{#each burgers}}
         {{#if this.devoured}}
-        <div class='burgerEaten'>
-          <div>
-            {{this.burger_name}}
-          </div>
+        <div >
+            <p class='burgerEaten'>{{this.burger_name}}</p>
         </div>
         {{/if}}
         {{/each}}
@@ -40,24 +42,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  $(function () {
-    $("button").on("click", function (event) {
-      console.log("this works")
-      let id = $(this).attr("value");
-      console.log("id",id)
-      $.ajax("/api/burgers/" + id, {
-        type: "PUT",
-        data: 1
-      }).then(
-        function () {
-          console.log("eaten");
-          // Reload the page to get the updated list
-          location.reload();
-        }
-      );
-    })
-})
-
-</script>
