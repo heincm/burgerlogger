@@ -1,6 +1,12 @@
 <main>
+  <div class="jumbotron">
+    <h1 class="display-4">Burgerlogger</h1>
+    <p class="lead">Create your own burgers and devour them!</p>
+  </div>
   <div class="container">
-    <h1>Burgers!</h1>
+    <div class="row">
+      <img src="../public/assets/img/burger.png" alt="burger">
+    </div>
     <div class="row">
       <div class="col s6">
         <h3>Uneaten Burgers</h3>
@@ -9,7 +15,7 @@
         <p>{{this.id}}. {{this.burger_name}}</p>
         <div>
           <form action="/api/burgers/{{this.id}}?_method=PUT" method="POST">
-            <button type="submit">Devour!</button>
+            <button type="submit" class="btn btn-danger">Devour!</button>
           </form>
         </div>
         {{/unless}}
@@ -20,8 +26,8 @@
         <h3>Eaten burgers</h3>
         {{#each burgers}}
         {{#if this.devoured}}
-        <div >
-            <p class='burgerEaten'>{{this.burger_name}}</p>
+        <div>
+          <p class='burgerEaten'>{{this.burger_name}}</p>
         </div>
         {{/if}}
         {{/each}}
@@ -37,7 +43,7 @@
       <h2>Add A Burger Option</h2>
       <form action="api/burgers" method="POST">
         <input type="text" id="burger_name" name="burger_name">
-        <button type="submit">Add a Burger</button>
+        <button type="submit" class="btn-primary">Add a Burger</button>
       </form>
     </div>
   </div>
