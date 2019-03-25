@@ -1,3 +1,10 @@
 .burgerEaten {
     color: gray;
 }
+
+img {
+    max-width: 500px;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+}
